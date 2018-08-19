@@ -20,33 +20,51 @@ namespace Dice_Roller
         private void Roll_Click(object sender, EventArgs e)
         {
             Result.Clear();
-            int parse;
-            KeyValuePair<string, string> die = (KeyValuePair<string, string>)DieType.SelectedItem;
-            string value = die.Value.ToString();
-            parse = int.Parse(value);
-            if (parse < 1)
+            KeyValuePair<string, int> die = (KeyValuePair<string, int>)DieType.SelectedItem;
+            int value = die.Value;
+            if (value < 1)
             {
                 MessageBox.Show("Please Select A Die Type From The Dropdown.");
             }
             else
             {
-                int roll = DieRoll(parse);
+                int roll = DieRoll(value);
                 string result = roll.ToString();
                 Result.Items.Add(result);
+                PassFail(roll);
             }
             
         }
 
-        private int DieRoll(int parse)
+        private int DieRoll(int value)
         {
             int result;
             DiceLogic roller = new DiceLogic();
-            if (parse == 1)
+            result = roller.Roll(value);
+            return result;
+        }
+
+        private void PassFail(int roll)
+        {
+            int difficulty;
+            string entry = DifficultyRating.Text;
+            if (int.TryParse(entry, out difficulty))
             {
-                result = roller.D4();
-                return result;
+                if (difficulty < roll)
+                {
+                    string result = "Pass";
+                    Result.Items.Add(result);
+                }
+                else
+                {
+                    string result = "Fail";
+                    Result.Items.Add(result);
+                }
             }
-            else return 0;
+            else
+            {
+                Result.Items.Add("Invalid Difficulty");
+            }
         }
 
         private void DieType_SelectedIndexChanged(object sender, EventArgs e)
@@ -66,14 +84,14 @@ namespace Dice_Roller
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            DieType.Items.Add(new KeyValuePair<string, string>("Select Die Type", "0"));
-            DieType.Items.Add(new KeyValuePair<string, string>("D4", "1"));
-            DieType.Items.Add(new KeyValuePair<string, string>("D6", "2"));
-            DieType.Items.Add(new KeyValuePair<string, string>("D8", "3"));
-            DieType.Items.Add(new KeyValuePair<string, string>("D10", "4"));
-            DieType.Items.Add(new KeyValuePair<string, string>("D12", "5"));
-            DieType.Items.Add(new KeyValuePair<string, string>("D20", "6"));
-            DieType.Items.Add(new KeyValuePair<string, string>("D100", "7"));
+            DieType.Items.Add(new KeyValuePair<string, int>("Select Die Type", 0));
+            DieType.Items.Add(new KeyValuePair<string, int>("D4", 4));
+            DieType.Items.Add(new KeyValuePair<string, int>("D6", 7));
+            DieType.Items.Add(new KeyValuePair<string, int>("D8", 9));
+            DieType.Items.Add(new KeyValuePair<string, int>("D10", 11));
+            DieType.Items.Add(new KeyValuePair<string, int>("D12", 13));
+            DieType.Items.Add(new KeyValuePair<string, int>("D20", 21));
+            DieType.Items.Add(new KeyValuePair<string, int>("D100", 101));
 
             DieType.DisplayMember = "Key";
             DieType.ValueMember = "Value";
