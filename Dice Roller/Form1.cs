@@ -63,7 +63,10 @@ namespace Dice_Roller
             }
             else
             {
-                Result.Items.Add("Invalid Difficulty");
+                if (!string.IsNullOrEmpty(DifficultyRating.Text))
+                {
+                    Result.Items.Add("Invalid Difficulty");
+                }                
             }
         }
 
